@@ -17,28 +17,31 @@ module ActsAsVotable
 
     module LocalInstanceMethods
       def down_voted_by(voter, options = {})
-        params = set_vote_params voter, false, options
+        params = set_vote_option_params(options).merge(set_vote_basic_params(voter, false))
         ActsAsVotable::Vote.create(params) unless ActsAsVotable::Vote.exists?(params)
       end
 
-      def down_voted_by?(voter, options = {})
-        params = set_vote_params voter, false, options
+      def down_voted_by?(voter)
+        params = set_vote_basic_params voter, false
         ActsAsVotable::Vote.exists? params
       end
 
       private
 
-      def set_vote_params(voter, flag, options = {})
-        vote_scope = options[:vote_scope] || 'rank'
-        vote_weight = options[:vote_weight] || 1
+      def set_vote_option_params(options = {})
+        {
+          vote_scope: options[:vote_scope] || 'rank',
+          vote_weight: options[:vote_weight] || 1
+        }
+      end
+
+      def set_vote_basic_params(voter, flag)
         {
           voter_id: voter.id,
           voter_type: voter.class.name,
           votable_id: self.id,
           votable_type: self.class.name,
-          vote_flag: flag,
-          vote_scope: vote_scope,
-          vote_weight: vote_weight
+          vote_flag: flag
         }
       end
     end
