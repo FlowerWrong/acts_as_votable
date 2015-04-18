@@ -87,7 +87,7 @@ end
 @post.up_voted_by @user2, :vote_scope => 'rank', :vote_weight => 1
 
 # tally them up!
-@post.votes(:vote_scope => 'rank').sum(:vote_weight)  # => 10
-@post.up_votes(:vote_scope => 'rank').sum(:vote_weight)  # => 6
-@post.down_votes(:vote_scope => 'rank').sum(:vote_weight)  # => 4
+@post.votes.where(vote_scope: 'range').sum(:vote_weight)  # => 10
+@post.up_votes.where(vote_scope: 'range').sum(:vote_weight)  # => 6
+@post.down_votes.where(vote_scope: 'range').sum(:vote_weight)  # => 4
 ```

@@ -35,6 +35,9 @@ class VotableTest < ActiveSupport::TestCase
 
     assert_equal 6, ActsAsVotable::Vote.all.first.vote_weight
     assert_equal 'range', ActsAsVotable::Vote.all.first.vote_scope
+
+    assert_equal 12, @post2.votes.where(vote_scope: 'range').sum(:vote_weight)
+    assert_equal 12, @post2.down_votes.where(vote_scope: 'range').sum(:vote_weight)
   end
 
   test 'post1 should be up voted by user1 and user2' do
