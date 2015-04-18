@@ -50,6 +50,18 @@ module ActsAsVotable
         down_voted?(votable) || up_voted?(votable)
       end
 
+      def voted_items
+        self.votes
+      end
+
+      def down_voted_items
+        self.votes.where(vote_flag: false)
+      end
+
+      def up_voted_items
+        self.votes.where(vote_flag: true)
+      end
+
       private
 
       def set_vote_option_params(options = {})

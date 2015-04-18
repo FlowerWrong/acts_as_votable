@@ -72,8 +72,6 @@ end
 @user.up_voted_items
 @user.down_voted_items
 
-@post.vote_registered?  # => true
-
 @post.positives.size  # => 积极(包含up)
 @post.negatives.size  # => 消极(包含down)
 
