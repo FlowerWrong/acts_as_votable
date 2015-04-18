@@ -13,6 +13,12 @@ module ActsAsVotable
 
     module ClassMethods
       def acts_as_voter
+        class_eval do
+          has_many :votes,
+                   class_name: 'ActsAsVotable::Vote',
+                   as: :votor,
+                   dependent: :delete_all
+        end
         include ActsAsVotable::Voter::LocalInstanceMethods
       end
     end

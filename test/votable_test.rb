@@ -7,6 +7,7 @@ class VotableTest < ActiveSupport::TestCase
     @post2 = Post.create name: 'post2'
     @user1 = User.create name: 'user1'
     @user2 = User.create name: 'user2'
+    @user3 = User.create name: 'user3'
   end
 
   def teardown
@@ -61,5 +62,34 @@ class VotableTest < ActiveSupport::TestCase
     @post1.up_voted_by @user1
     @post1.down_voted_by @user2
     assert_equal 2, @post1.votes.size
+  end
+
+  # down_votes and up_votes
+  test "post2's down and up votes" do
+    @post2.up_voted_by @user1
+    @post2.down_voted_by @user2
+    @post2.down_voted_by @user3
+    assert_equal 3, @post2.votes.size
+    assert_equal 2, @post2.down_votes.size
+    assert_equal 2, @post2.negatives.size  # alias_method
+    assert_equal 1, @post2.up_votes.size
+    assert_equal 1, @post2.positives.size  # alias_method
+  end
+
+  # voted_by
+  test 'post1 should voted_by user1 and user2' do
+    @post1.voted_by voter: @user1, vote: 'up'
+    @post1.voted_by voter: @user2, vote: 'down'
+    assert_equal true, @post1.up_voted_by?(@user1)
+    assert_equal true, @post1.down_voted_by?(@user2)
+    assert_equal 1, ActsAsVotable::Vote.all.first.vote_weight
+    assert_equal 'rank', ActsAsVotable::Vote.all.first.vote_scope
+  end
+
+  # voted_by vote raise
+  test 'post1 voted_by user1 with hehe should raise NotAllowedVoteFlag' do
+    assert_raise(ActsAsVotable::NotAllowedVoteFlag) {
+      @post1.voted_by voter: @user1, vote: 'hehe'
+    }
   end
 end
