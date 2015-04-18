@@ -60,8 +60,10 @@ end
 @post.up_votes.size  # => 3
 @post.down_votes.size  # => 2
 
-@user.up_votes @post2
-@user.down_votes @post2
+@user.up_voted @post2
+@user.up_voted? @post2
+@user.down_voted @post2  # => true
+@user.down_voted? @post2  # => true
 @user.voted_up_on? @post1  # => true
 @user.voted_down_on? @post1  # => false
 @user.voted? @post1  # 是否对 @post1 进行了投票
