@@ -31,9 +31,18 @@ class VoterTest < ActiveSupport::TestCase
     @user2.up_voted @post2, vote_scope: 'range', vote_weight: 6
     assert_equal true, @user1.down_voted?(@post2)
     assert_equal true, @user2.up_voted?(@post2)
+    assert_equal true, @user1.voted_down_on?(@post2)
+    assert_equal true, @user2.voted_up_on?(@post2)
 
     assert_equal 6, ActsAsVotable::Vote.all.first.vote_weight
     assert_equal 'range', ActsAsVotable::Vote.all.first.vote_scope
+  end
+
+  # voted?
+  test 'user1 voted? post1 and user2 not voted? post1' do
+    @user1.down_voted @post1
+    assert_equal true, @user1.voted?(@post1)
+    assert_equal false, @user2.voted?(@post1)
   end
 
 =begin

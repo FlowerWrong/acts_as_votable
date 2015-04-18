@@ -43,6 +43,13 @@ module ActsAsVotable
         ActsAsVotable::Vote.exists? params
       end
 
+      alias_method :voted_up_on?, :up_voted?
+      alias_method :voted_down_on?, :down_voted?
+
+      def voted?(votable)
+        down_voted?(votable) || up_voted?(votable)
+      end
+
       private
 
       def set_vote_option_params(options = {})
