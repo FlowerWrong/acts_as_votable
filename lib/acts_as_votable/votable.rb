@@ -26,6 +26,16 @@ module ActsAsVotable
         ActsAsVotable::Vote.exists? params
       end
 
+      def up_voted_by(voter, options = {})
+        params = set_vote_option_params(options).merge(set_vote_basic_params(voter, true))
+        ActsAsVotable::Vote.create(params) unless ActsAsVotable::Vote.exists?(params)
+      end
+
+      def up_voted_by?(voter)
+        params = set_vote_basic_params voter, true
+        ActsAsVotable::Vote.exists? params
+      end
+
       private
 
       def set_vote_option_params(options = {})

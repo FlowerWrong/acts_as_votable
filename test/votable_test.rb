@@ -35,4 +35,24 @@ class VotableTest < ActiveSupport::TestCase
     assert_equal 6, ActsAsVotable::Vote.all.first.vote_weight
     assert_equal 'range', ActsAsVotable::Vote.all.first.vote_scope
   end
+
+  test 'post1 should be up voted by user1 and user2' do
+    @post1.up_voted_by @user1
+    @post1.up_voted_by @user2
+    assert_equal true, @post1.up_voted_by?(@user1)
+    assert_equal true, @post1.up_voted_by?(@user2)
+    assert_equal 1, ActsAsVotable::Vote.all.first.vote_weight
+    assert_equal 'rank', ActsAsVotable::Vote.all.first.vote_scope
+  end
+
+  test 'post2 should be up voted by user1 and user2 with scope and weight' do
+    @post2.up_voted_by @user1, vote_scope: 'range', vote_weight: 6
+    @post2.up_voted_by @user2, vote_scope: 'range', vote_weight: 6
+
+    assert_equal true, @post2.up_voted_by?(@user1)
+    assert_equal true, @post2.up_voted_by?(@user2)
+
+    assert_equal 6, ActsAsVotable::Vote.all.first.vote_weight
+    assert_equal 'range', ActsAsVotable::Vote.all.first.vote_scope
+  end
 end
