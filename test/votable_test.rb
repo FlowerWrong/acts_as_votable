@@ -55,4 +55,11 @@ class VotableTest < ActiveSupport::TestCase
     assert_equal 6, ActsAsVotable::Vote.all.first.vote_weight
     assert_equal 'range', ActsAsVotable::Vote.all.first.vote_scope
   end
+
+  # votes.size
+  test "post1's votes" do
+    @post1.up_voted_by @user1
+    @post1.down_voted_by @user2
+    assert_equal 2, @post1.votes.size
+  end
 end

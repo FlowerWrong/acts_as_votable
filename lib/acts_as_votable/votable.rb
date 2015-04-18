@@ -1,3 +1,4 @@
+require 'awesome_print'
 ##
 # Author:: FuSheng Yang (mailto:sysuyangkang@gmail.com)
 # Copyright:: Copyright (c) 2015 thecampus.cc
@@ -11,6 +12,13 @@ module ActsAsVotable
 
     module ClassMethods
       def acts_as_votable
+        class_eval do
+          has_many :votes,
+                   :class_name => 'ActsAsVotable::Vote',
+                   :as => :votable,
+                   :dependent => :delete_all
+        end
+
         include ActsAsVotable::Votable::LocalInstanceMethods
       end
     end
