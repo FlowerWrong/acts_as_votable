@@ -13,11 +13,12 @@ rails plugin new acts_as_votable
 cd acts_as_votable
 
 # edit gemspec
-```
+# push to github
 
-##### Test it
-
-```ruby
+# Test it
 rake -T
 rake test
+
+# Add migration generator and model
+
 ```
