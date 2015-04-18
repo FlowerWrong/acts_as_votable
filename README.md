@@ -4,6 +4,15 @@ This project rocks and uses MIT-LICENSE.
 
 Thx [ryanto](https://github.com/ryanto/acts_as_votable)
 
+#### Install
+
+```ruby
+gem 'acts_as_votable', github: 'FlowerWrong/acts_as_votable', branch: 'master'
+bundle install
+rails generate acts_as_votable:migration
+rake db:migrate
+```
+
 ## How to write a rails acts_as_xxx plugin
 
 ##### [Create a plugin with rails cmd](http://guides.rubyonrails.org/plugins.html)
@@ -21,6 +30,13 @@ rake test
 
 # Add migration generator and model
 # plan your methods
+
+cd test/dummy
+rails generate acts_as_votable:migration
+rails g model Post name
+rails g model User name
+
+
 ```
 
 ##### Methods
@@ -35,14 +51,14 @@ class User < ActiveRecord::Base
 end
 
 
-@post.downvoted_by @user2
-@post.upvoted_by @user3
-@post.downvoted_by? @user2
-@post.upvoted_by? @user3
+@post.down_voted_by @user2
+@post.down_voted_by? @user2
+@post.up_voted_by @user3
+@post.up_voted_by? @user3
 
 @post.votes.size  # => 5 总投票数(包含up, down)
-@post.upvotes.size  # => 3
-@post.downvotes.size  # => 2
+@post.up_votes.size  # => 3
+@post.down_votes.size  # => 2
 
 @user.up_votes @post2
 @user.down_votes @post2
@@ -54,14 +70,24 @@ end
 @user.up_voted_items
 @user.down_voted_items
 
-@hat.vote_registered?  # => true
+@post.vote_registered?  # => true
 
-@hat.positives.size  # => 积极(包含up)
-@hat.negatives.size  # => 消极(包含down)
+@post.positives.size  # => 积极(包含up)
+@post.negatives.size  # => 消极(包含down)
 
 # 不能重复投票
 @user.up_votes @post2
 @user.up_votes @post2
-@shoe.votes.size  # => 1
-@shoe.upvotes.size  # => 1
+@post.votes.size  # => 1
+@post.upvotes.size  # => 1
+
+# Adding weights to your votes, The default value is 1.
+@post.voted_by :voter => @user5, :vote => 'up', :vote_scope => 'rank', :vote_weight => 3
+@post.down_voted_by @user2, :vote_scope => 'rank', :vote_weight => 1
+@post.up_voted_by @user2, :vote_scope => 'rank', :vote_weight => 1
+
+# tally them up!
+@post.votes(:vote_scope => 'rank').sum(:vote_weight)  # => 10
+@post.up_votes(:vote_scope => 'rank').sum(:vote_weight)  # => 6
+@post.down_votes(:vote_scope => 'rank').sum(:vote_weight)  # => 4
 ```

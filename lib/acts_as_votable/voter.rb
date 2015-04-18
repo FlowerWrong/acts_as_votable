@@ -22,3 +22,5 @@ module ActsAsVotable
     end
   end
 end
+
+ActiveRecord::Base.send :include, ActsAsVotable::Voter
