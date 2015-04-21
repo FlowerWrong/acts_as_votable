@@ -1,4 +1,3 @@
-require 'awesome_print'
 ##
 # Author:: FuSheng Yang (mailto:sysuyangkang@gmail.com)
 # Copyright:: Copyright (c) 2015 thecampus.cc
